@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Reserva de Turnos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-item>
+    <ion-label position="stacked">Seleccione una Fecha:</ion-label>
+    <ion-input type="date" [(ngModel)]="fechaSeleccionada"></ion-input>
+  </ion-item>
+
+  <h3 class="ion-margin-top">Horarios disponibles:</h3>
+
+  <ion-list>
+    @for (turno of listaTurnos; track turno.hora) {
+      <ion-item>
+        <ion-icon 
+          slot="start" 
+          [name]="turno.estado === 'Disponible' ? 'checkmark-circle-outline' : 'close-circle-outline'"
+          [color]="turno.estado === 'Disponible' ? 'success' : 'danger'">
+        </ion-icon>
+
+        <ion-label>
+          <h2>{{ turno.hora }}</h2>
+          <ion-note [color]="turno.estado === 'Disponible' ? 'success' : 'medium'">
+            {{ turno.estado }}
+          </ion-note>
+        </ion-label>
+
+        <ion-button 
+          slot="end" 
+          [disabled]="turno.estado === 'Reservado'" 
+          (click)="reservarTurno(turno)"
+          [color]="turno.estado === 'Disponible' ? 'primary' : 'light'">
+          {{ turno.estado === 'Disponible' ? 'Reservar' : 'No disponible' }}
+        </ion-button>
+      </ion-item>
+    }
+  </ion-list>
+
+  @if (totalDisponibles > 0) {
+    <div class="ion-margin-top ion-padding border-total">
+      <ion-label color="dark">
+        <strong>Turnos disponibles: {{ totalDisponibles }}</strong>
+      </ion-label>
+    </div>
+  } @else {
+    <div class="ion-margin-top ion-padding mensaje-alerta">
+      <ion-icon name="alert-circle-outline" color="warning"></ion-icon>
+      <ion-label color="warning">
+        No hay turnos disponibles para esta fecha.
+      </ion-label>
+    </div>
+  }
+
+</ion-content>
